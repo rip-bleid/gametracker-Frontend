@@ -1,8 +1,8 @@
 import { useState } from "react";
 import API from "../api.js";
 
-export default function Login() {
-  const [form, setForm] = useState({ email: "", contraseña: "" });
+export default function Registro() {
+  const [form, setForm] = useState({ nombre: "", email: "", contraseña: "" });
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -11,17 +11,27 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await API.post("/auth/login", form);
-      alert(`Bienvenido ${res.data.nombre || "usuario"} 😎`);
-    } catch (err) {
-      alert("Error: Credenciales incorrectas o servidor no responde");
+      await API.post("/auth/register", form);
+      alert("Usuario registrado correctamente 🎉");
+    }catch (err) {
+      console.error("Error completo:", err);
+      alert("Error: " + (err.response?.data?.error || "No se pudo registrar el usuario"));
     }
   };
 
   return (
     <div>
-      <h2>Iniciar Sesión</h2>
+      <h2>Registro de Usuario</h2>
       <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          name="nombre"
+          placeholder="Nombre"
+          value={form.nombre}
+          onChange={handleChange}
+          required
+        />
+        <br />
         <input
           type="email"
           name="email"
@@ -32,7 +42,7 @@ export default function Login() {
         />
         <br />
         <input
-          type="password"
+          type="contraseña"
           name="contraseña"
           placeholder="Contraseña"
           value={form.contraseña}
@@ -40,7 +50,7 @@ export default function Login() {
           required
         />
         <br />
-        <button type="submit">Entrar</button>
+        <button type="submit">Registrarse</button>
       </form>
     </div>
   );

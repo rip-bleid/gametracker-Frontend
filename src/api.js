@@ -1,7 +1,7 @@
-import axios from "axios"; 
+import axios from "axios";
 
 const api = axios.create({
-    baseURL: "http://localhost:5000", // cambia el puerto si se cambia en el backend
+  baseURL: "http://localhost:5000/api", // 👈 aquí debe estar el puerto real del backend
 });
 
-export default api; 
+export default api;
