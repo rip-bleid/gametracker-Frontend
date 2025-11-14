@@ -1,76 +1,116 @@
-import { useState } from "react";
-import styled, { keyframes } from "styled-components";
-import api from "../api.js";
-
-const pulse = keyframes`
-  0% { box-shadow: 0 0 10px #45a29e, 0 0 20px #66fcf1; }
-  100% { box-shadow: 0 0 25px #45a29e, 0 0 50px #66fcf1; }
-`;
-
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: radial-gradient(circle at bottom, #0b0c10, #1f2833);
-`;
-
-const Card = styled.div`
-  background: rgba(31, 40, 51, 0.9);
-  padding: 40px;
-  border-radius: 15px;
-  text-align: center;
-  animation: ${pulse} 2s ease-in-out infinite alternate;
-  width: 400px;
-`;
-
-const Input = styled.input`
-  display: block;
-  width: 100%;
-  margin: 12px 0;
-  padding: 10px;
-  border: none;
-  border-radius: 10px;
-  text-align: center;
-  background: #0b0c10;
-  color: #66fcf1;
-  box-shadow: 0 0 10px #45a29e inset;
-  font-family: 'Orbitron', sans-serif;
-`;
-
-const Message = styled.div`
-  margin-top: 15px;
-  color: ${({ error }) => (error ? "#ff5c5c" : "#45a29e")};
-`;
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Registro() {
-  const [form, setForm] = useState({ nombre: "", email: "", contraseña: "" });
-  const [mensaje, setMensaje] = useState("");
+  const [form, setForm] = useState({
+    nombre: "",
+    correo: "",
+    contraseña: "",
+  });
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const navigate = useNavigate();
 
+  // 👉 actualiza el formulario al escribir
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  // 👉 envía los datos al backend
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post("/auth/register", form);
-      setMensaje(`✅ ${res.data.mensaje}`);
-    } catch (err) {
-      setMensaje("❌ Error al registrar usuario");
+      const res = await fetch("http://localhost:5000/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("✅ Usuario registrado correctamente");
+        navigate("/login");
+      } else {
+        alert(data.mensaje || "❌ Error al registrar usuario");
+      }
+    } catch (error) {
+      alert("⚠️ Error de conexión con el servidor");
+      console.error(error);
     }
   };
 
   return (
-    <Container>
-      <Card>
-        <h2>Registro de Usuario</h2>
-        <form onSubmit={handleSubmit}>
-          <Input name="nombre" placeholder="Nombre" onChange={handleChange} />
-          <Input type="email" name="email" placeholder="Correo" onChange={handleChange} />
-          <Input type="password" name="contraseña" placeholder="Contraseña" onChange={handleChange} />
-          <button type="submit">Registrar</button>
-        </form>
-        {mensaje && <Message error={mensaje.includes("❌")}>{mensaje}</Message>}
-      </Card>
-    </Container>
+    <div
+      style={{
+        textAlign: "center",
+        marginTop: "80px",
+      }}
+    >
+      <h2>Registro de usuario</h2>
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          display: "inline-block",
+          textAlign: "left",
+          background: "#1b2845",
+          padding: "30px",
+          borderRadius: "10px",
+          boxShadow: "0 0 15px rgba(0,188,212,0.4)",
+          color: "#fff",
+        }}
+      >
+        <div style={{ marginBottom: "10px" }}>
+          <label>Nombre:</label>
+          <br />
+          <input
+            type="text"
+            name="nombre"
+            value={form.nombre}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div style={{ marginBottom: "10px" }}>
+          <label>Correo:</label>
+          <br />
+          <input
+            type="email"
+            name="correo"
+            value={form.correo}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div style={{ marginBottom: "10px" }}>
+          <label>Contraseña:</label>
+          <br />
+          <input
+            type="password"
+            name="contraseña"
+            value={form.contraseña}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <button
+          type="submit"
+          style={{
+            width: "100%",
+            marginTop: "10px",
+            padding: "10px",
+            backgroundColor: "#00bcd4",
+            border: "none",
+            color: "#fff",
+            borderRadius: "6px",
+            cursor: "pointer",
+          }}
+        >
+          Registrarse
+        </button>
+      </form>
+    </div>
   );
 }

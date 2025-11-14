@@ -1,29 +1,34 @@
-import React from 'react';
-import GlobalStyle from './GlobalStyles';
-import Navbar from './components/Navbar';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Inicio from './pages/Home';
-import Juegos from './pages/Juegos';
-import Reseñas from './pages/Reseñas';
-import Biblioteca from './pages/Biblioteca';
-import Login from './pages/Login';
-import Registro from './pages/Registro';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import Juegos from "./pages/Juegos";
+import Biblioteca from "./pages/Biblioteca";
+import Reseñas from "./pages/Reseñas";
+import Login from "./pages/Login";
+import Registro from "./pages/Registro";
+import GlobalStyle from "./GlobalStyles";
 
-function App() {
+export default function App() {
   return (
-    <Router>
+    <>
+      {/* 🌈 Fondo animado global */}
       <GlobalStyle />
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Inicio />} />
-        <Route path="/juegos" element={<Juegos />} />
-        <Route path="/resenas" element={<Reseñas />} />
-        <Route path="/biblioteca" element={<Biblioteca />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Registro />} />
-      </Routes>
-    </Router>
+
+      <Router>
+        {/* 🧭 Barra de navegación visible en TODAS las páginas */}
+        <Navbar />
+
+        <div style={{ padding: "2rem" }}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/juegos" element={<Juegos />} />
+            <Route path="/biblioteca" element={<Biblioteca />} />
+            <Route path="/reseñas" element={<Reseñas />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/registro" element={<Registro />} />
+          </Routes>
+        </div>
+      </Router>
+    </>
   );
 }
-
-export default App;

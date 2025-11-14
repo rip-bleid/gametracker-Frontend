@@ -31,8 +31,6 @@ export default function Navbar() {
       <NavLink to="/juegos">Juegos</NavLink>
       <NavLink to="/reseñas">Reseñas</NavLink>
       <NavLink to="/biblioteca">Biblioteca</NavLink>
-      <NavLink to="/login">Login</NavLink>
-      <NavLink to="/register">Registro</NavLink>
     </Nav>
   );
 }
