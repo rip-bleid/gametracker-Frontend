@@ -1,0 +1,27 @@
+.grid-juegos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.juego-card {
+  text-decoration: none;
+  background: rgba(255,255,255,0.08);
+  padding: 15px;
+  border-radius: 15px;
+  text-align: center;
+  color: white;
+  transition: 0.2s ease;
+}
+
+.juego-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.juego-card:hover {
+  transform: scale(1.05);
+  background: rgba(255,255,255,0.2);
+}

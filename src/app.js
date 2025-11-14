@@ -7,6 +7,7 @@ import Reseñas from "./pages/Reseñas";
 import Login from "./pages/Login";
 import Registro from "./pages/Registro";
 import GlobalStyle from "./GlobalStyles";
+import JuegoDetalle from "../src/components/JuegoDetalle";
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
             <Route path="/reseñas" element={<Reseñas />} />
             <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<Registro />} />
+            <Route path="/juegos/:id" element={<JuegoDetalle />} />
           </Routes>
         </div>
       </Router>

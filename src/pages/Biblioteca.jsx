@@ -1,9 +1,23 @@
-export default function biblioteca() {
-    return (
-        <div>
-            <h2>Mi biblioteca</h2>
-            <p>Aqui se muestran los juegos que has agregado.</p>
-            
-        </div>
-    )
+import { useEffect, useState } from "react";
+import api from "../api";
+import ListaDeJuegos from "../components/ListaDeJuegos";
+
+export default function Biblioteca() {
+  const [juegos, setJuegos] = useState([]);
+
+  const cargar = async () => {
+    const res = await api.get("/juegos");
+    setJuegos(res.data);
+  };
+
+  useEffect(() => {
+    cargar();
+  }, []);
+
+  return (
+    <div style={{ color: "white", padding: "30px" }}>
+      <h2>📚 Mi Biblioteca</h2>
+      <ListaDeJuegos juegos={juegos} />
+    </div>
+  );
 }
