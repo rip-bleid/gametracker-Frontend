@@ -8,6 +8,9 @@ const Nav = styled.nav`
   justify-content: center;
   align-items: center;
   box-shadow: 0 0 20px #45a29e;
+  border-bottom-left-radius: 40px;
+  border-bottom-right-radius: 40px;
+
 `;
 
 const NavLink = styled(Link)`

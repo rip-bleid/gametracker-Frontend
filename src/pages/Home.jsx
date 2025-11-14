@@ -14,6 +14,11 @@ const Container = styled.div`
   height: 100vh;
   padding: 0 5rem;
   color: #fff;
+  border-radius: 40px;
+  overflow: hidden;
+  box-shadow: 0 0 50px rgba(0, 180, 255, 0.35),
+              0 0 120px rgba(0, 200, 255, 0.25),
+              inset 0 0 40px rgba(0, 180, 255, 0.2);
 
   /* 🔥 Fondo animado */
   background: linear-gradient(135deg, #000428, #004e92, #001b44, #003060);
@@ -58,7 +63,7 @@ const Button = styled(motion.button)`
   border: 2px solid #00bcd4;
   padding: 0.8rem 2rem;
   font-size: 1rem;
-  border-radius: 10px;
+  border-radius: 20px;
   cursor: pointer;
   transition: all 0.3s ease;
 
@@ -71,6 +76,8 @@ const Button = styled(motion.button)`
 const CarouselSection = styled(motion.div)`
   width: 45%;
   max-width: 500px;
+  border-radius: 30px;
+  overflow: hidden;
 
   @media (max-width: 900px) {
     width: 90%;
@@ -80,7 +87,7 @@ const CarouselSection = styled(motion.div)`
 
 const Image = styled.img`
   width: 100%;
-  border-radius: 15px;
+  border-radius: 30px;
   box-shadow: 0px 0px 20px rgba(0, 188, 212, 0.4);
 `;
 

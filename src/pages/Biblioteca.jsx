@@ -15,7 +15,7 @@ export default function Biblioteca() {
   }, []);
 
   return (
-    <div style={{ color: "white", padding: "30px" }}>
+    <div style={{ color: "white", padding: "30px", textAlign: "center" }}>
       <h2>📚 Mi Biblioteca</h2>
       <ListaDeJuegos juegos={juegos} />
     </div>
