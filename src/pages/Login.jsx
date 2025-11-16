@@ -57,7 +57,7 @@ export default function Login() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) navigate("/juegos");
-  }, []);
+  }, );
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
