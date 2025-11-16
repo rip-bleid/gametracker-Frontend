@@ -4,7 +4,6 @@ import api from "../api.js";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/Authcontext";
 
-// 🔥 animación
 const glow = keyframes`
   0% { box-shadow: 0 0 5px #45a29e, 0 0 20px #66fcf1; }
   100% { box-shadow: 0 0 20px #45a29e, 0 0 40px #66fcf1; }
@@ -38,7 +37,6 @@ const Input = styled.input`
   background: #0b0c10;
   color: #66fcf1;
   box-shadow: 0 0 10px #45a29e inset;
-  font-family: 'Orbitron', sans-serif;
 `;
 
 const Message = styled.div`
@@ -51,13 +49,12 @@ export default function Login() {
   const [mensaje, setMensaje] = useState("");
   const navigate = useNavigate();
 
-  // 🔥 el context SIN errores
   const { login } = useContext(AuthContext);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) navigate("/juegos");
-  }, );
+  }, [navigate]);
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -68,11 +65,9 @@ export default function Login() {
     try {
       const res = await api.post("/auth/login", form);
 
-      // 🔥 Guardamos en el contexto
       login(res.data.usuario, res.data.token);
 
       navigate("/juegos");
-
     } catch (err) {
       setMensaje("❌ Credenciales incorrectas");
     }
@@ -84,26 +79,12 @@ export default function Login() {
         <h2>Inicio de Sesión</h2>
 
         <form onSubmit={handleSubmit}>
-          <Input
-            type="email"
-            name="email"
-            placeholder="Correo"
-            onChange={handleChange}
-          />
-
-          <Input
-            type="password"
-            name="password"
-            placeholder="Contraseña"
-            onChange={handleChange}
-          />
-
+          <Input type="email" name="email" placeholder="Correo" onChange={handleChange} />
+          <Input type="password" name="password" placeholder="Contraseña" onChange={handleChange} />
           <button type="submit">Entrar</button>
         </form>
 
-        {mensaje && (
-          <Message error={mensaje.includes("❌")}>{mensaje}</Message>
-        )}
+        {mensaje && <Message error>{mensaje}</Message>}
       </Card>
     </Container>
   );

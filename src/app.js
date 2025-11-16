@@ -6,6 +6,7 @@ import Biblioteca from "./pages/Biblioteca";
 import Reseñas from "./pages/Reseñas";
 import Login from "./pages/Login";
 import Registro from "./pages/Registro";
+import Perfil from "./pages/Perfil";  // ⭐ IMPORTANTE
 import GlobalStyle from "./GlobalStyles";
 import JuegoDetalle from "./components/JuegoDetalle";
 import RutaPrivada from "./components/RutaPrivada";
@@ -21,9 +22,21 @@ export default function App() {
 
         <div style={{ padding: "2rem" }}>
           <Routes>
+
+            {/* Públicas */}
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<Registro />} />
+
+            {/* Privadas */}
+            <Route
+              path="/perfil"
+              element={
+                <RutaPrivada>
+                  <Perfil />
+                </RutaPrivada>
+              }
+            />
 
             <Route
               path="/juegos"
@@ -60,6 +73,7 @@ export default function App() {
                 </RutaPrivada>
               }
             />
+
           </Routes>
         </div>
       </Router>
