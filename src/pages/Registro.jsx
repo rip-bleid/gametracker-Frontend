@@ -1,113 +1,55 @@
+// src/pages/Registro.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../api.js";
 
 export default function Registro() {
   const [form, setForm] = useState({
     nombre: "",
-    correo: "",
-    contraseña: "",
+    email: "",
+    password: "", // debe llamarse 'password' para coincidir con backend
   });
 
   const navigate = useNavigate();
 
-  // 👉 actualiza el formulario al escribir
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  // 👉 envía los datos al backend
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const res = await fetch("http://localhost:5000/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
+      // Llamada al backend para registrar
+      const res = await api.post("/auth/register", form);
 
-      const data = await res.json();
-
-      if (res.ok) {
-        alert("✅ Usuario registrado correctamente");
-        navigate("/login");
-      } else {
-        alert(data.mensaje || "❌ Error al registrar usuario");
-      }
-    } catch (error) {
-      alert("⚠️ Error de conexión con el servidor");
-      console.error(error);
+      // Si el backend devuelve token o usuario, no hace falta guardarlo aquí.
+      // Redirigimos al login para que el usuario ingrese sus credenciales.
+      alert("Usuario registrado correctamente. Ahora inicia sesión.");
+      navigate("/login");
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.mensaje || "Error al registrar usuario");
     }
   };
 
   return (
-    <div
-      style={{
-        textAlign: "center",
-        marginTop: "80px",
-      }}
-    >
+    <div style={{ textAlign: "center", marginTop: "80px" }}>
       <h2>Registro de usuario</h2>
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          display: "inline-block",
-          textAlign: "left",
-          background: "#1b2845",
-          padding: "30px",
-          borderRadius: "10px",
-          boxShadow: "0 0 15px rgba(0,188,212,0.4)",
-          color: "#fff",
-        }}
-      >
-        <div style={{ marginBottom: "10px" }}>
-          <label>Nombre:</label>
-          <br />
-          <input
-            type="text"
-            name="nombre"
-            value={form.nombre}
-            onChange={handleChange}
-            required
-          />
-        </div>
 
-        <div style={{ marginBottom: "10px" }}>
-          <label>Correo:</label>
-          <br />
-          <input
-            type="email"
-            name="correo"
-            value={form.correo}
-            onChange={handleChange}
-            required
-          />
-        </div>
+      <form onSubmit={handleSubmit} style={{
+          display: "inline-block", textAlign: "left",
+          background: "#1b2845", padding: "30px", borderRadius: "10px",
+          boxShadow: "0 0 15px rgba(0,188,212,0.4)", color: "#fff"
+        }}>
+        <label>Nombre</label><br />
+        <input name="nombre" value={form.nombre} onChange={handleChange} required /><br />
 
-        <div style={{ marginBottom: "10px" }}>
-          <label>Contraseña:</label>
-          <br />
-          <input
-            type="password"
-            name="contraseña"
-            value={form.contraseña}
-            onChange={handleChange}
-            required
-          />
-        </div>
+        <label>Correo</label><br />
+        <input type="email" name="email" value={form.email} onChange={handleChange} required /><br />
 
-        <button
-          type="submit"
-          style={{
-            width: "100%",
-            marginTop: "10px",
-            padding: "10px",
-            backgroundColor: "#00bcd4",
-            border: "none",
-            color: "#fff",
-            borderRadius: "6px",
-            cursor: "pointer",
-          }}
-        >
+        <label>Contraseña</label><br />
+        <input type="password" name="password" value={form.password} onChange={handleChange} required autoComplete="new-password" /><br />
+
+        <button type="submit" style={{ marginTop: 10, padding: 10, width: "100%", background: "#00bcd4", border: "none", color: "#000", fontWeight: "bold", borderRadius: 6 }}>
           Registrarse
         </button>
       </form>

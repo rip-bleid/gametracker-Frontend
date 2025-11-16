@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import styled, { keyframes } from "styled-components";
 import api from "../api.js";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/Authcontext";
 
+// 🔥 animación
 const glow = keyframes`
   0% { box-shadow: 0 0 5px #45a29e, 0 0 20px #66fcf1; }
   100% { box-shadow: 0 0 20px #45a29e, 0 0 40px #66fcf1; }
@@ -11,7 +14,7 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 100vh;  
   background: radial-gradient(circle at top, #0b0c10, #1f2833);
 `;
 
@@ -44,18 +47,34 @@ const Message = styled.div`
 `;
 
 export default function Login() {
-  const [form, setForm] = useState({ email: "", contraseña: "" });
+  const [form, setForm] = useState({ email: "", password: "" });
   const [mensaje, setMensaje] = useState("");
+  const navigate = useNavigate();
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  // 🔥 el context SIN errores
+  const { login } = useContext(AuthContext);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) navigate("/juegos");
+  }, []);
+
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const res = await api.post("/auth/login", form);
-      setMensaje(`✅ ${res.data.mensaje}`);
+
+      // 🔥 Guardamos en el contexto
+      login(res.data.usuario, res.data.token);
+
+      navigate("/juegos");
+
     } catch (err) {
-      setMensaje("❌ Credenciales incorrectas o servidor no responde");
+      setMensaje("❌ Credenciales incorrectas");
     }
   };
 
@@ -63,12 +82,28 @@ export default function Login() {
     <Container>
       <Card>
         <h2>Inicio de Sesión</h2>
+
         <form onSubmit={handleSubmit}>
-          <Input type="email" name="email" placeholder="Correo" onChange={handleChange} />
-          <Input type="password" name="contraseña" placeholder="Contraseña" onChange={handleChange} />
+          <Input
+            type="email"
+            name="email"
+            placeholder="Correo"
+            onChange={handleChange}
+          />
+
+          <Input
+            type="password"
+            name="password"
+            placeholder="Contraseña"
+            onChange={handleChange}
+          />
+
           <button type="submit">Entrar</button>
         </form>
-        {mensaje && <Message error={mensaje.includes("❌")}>{mensaje}</Message>}
+
+        {mensaje && (
+          <Message error={mensaje.includes("❌")}>{mensaje}</Message>
+        )}
       </Card>
     </Container>
   );

@@ -7,30 +7,62 @@ import Reseñas from "./pages/Reseñas";
 import Login from "./pages/Login";
 import Registro from "./pages/Registro";
 import GlobalStyle from "./GlobalStyles";
-import JuegoDetalle from "../src/components/JuegoDetalle";
+import JuegoDetalle from "./components/JuegoDetalle";
+import RutaPrivada from "./components/RutaPrivada";
+import AuthProvider from "./context/Authcontext";
 
 export default function App() {
   return (
-    <>
-      {/* 🌈 Fondo animado global */}
+    <AuthProvider>
       <GlobalStyle />
 
       <Router>
-        {/* 🧭 Barra de navegación visible en TODAS las páginas */}
         <Navbar />
 
         <div style={{ padding: "2rem" }}>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/juegos" element={<Juegos />} />
-            <Route path="/biblioteca" element={<Biblioteca />} />
-            <Route path="/reseñas" element={<Reseñas />} />
             <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<Registro />} />
-            <Route path="/juegos/:id" element={<JuegoDetalle />} />
+
+            <Route
+              path="/juegos"
+              element={
+                <RutaPrivada>
+                  <Juegos />
+                </RutaPrivada>
+              }
+            />
+
+            <Route
+              path="/biblioteca"
+              element={
+                <RutaPrivada>
+                  <Biblioteca />
+                </RutaPrivada>
+              }
+            />
+
+            <Route
+              path="/reseñas"
+              element={
+                <RutaPrivada>
+                  <Reseñas />
+                </RutaPrivada>
+              }
+            />
+
+            <Route
+              path="/juegos/:id"
+              element={
+                <RutaPrivada>
+                  <JuegoDetalle />
+                </RutaPrivada>
+              }
+            />
           </Routes>
         </div>
       </Router>
-    </>
+    </AuthProvider>
   );
 }
