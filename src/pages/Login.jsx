@@ -1,91 +1,104 @@
-import { useState, useEffect, useContext } from "react";
-import styled, { keyframes } from "styled-components";
-import api from "../api.js";
-import { useNavigate } from "react-router-dom";
+import { useState, useContext } from "react";
 import { AuthContext } from "../context/Authcontext";
-
-const glow = keyframes`
-  0% { box-shadow: 0 0 5px #45a29e, 0 0 20px #66fcf1; }
-  100% { box-shadow: 0 0 20px #45a29e, 0 0 40px #66fcf1; }
-`;
-
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;  
-  background: radial-gradient(circle at top, #0b0c10, #1f2833);
-`;
-
-const Card = styled.div`
-  background: rgba(31, 40, 51, 0.9);
-  padding: 40px;
-  border-radius: 15px;
-  text-align: center;
-  animation: ${glow} 2s ease-in-out infinite alternate;
-  width: 350px;
-`;
-
-const Input = styled.input`
-  display: block;
-  width: 100%;
-  margin: 15px 0;
-  padding: 10px;
-  border: none;
-  border-radius: 10px;
-  text-align: center;
-  background: #0b0c10;
-  color: #66fcf1;
-  box-shadow: 0 0 10px #45a29e inset;
-`;
-
-const Message = styled.div`
-  margin-top: 15px;
-  color: ${({ error }) => (error ? "#ff5c5c" : "#45a29e")};
-`;
+import api from "../api";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-  const [form, setForm] = useState({ email: "", password: "" });
-  const [mensaje, setMensaje] = useState("");
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const { login } = useContext(AuthContext);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) navigate("/juegos");
-  }, [navigate]);
-
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
-
-  const handleSubmit = async (e) => {
+  const enviar = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await api.post("/auth/login", form);
-
+      const res = await api.post("/auth/login", { email, password });
       login(res.data.usuario, res.data.token);
-
       navigate("/juegos");
     } catch (err) {
-      setMensaje("❌ Credenciales incorrectas");
+      alert("Credenciales incorrectas");
     }
   };
 
   return (
-    <Container>
-      <Card>
-        <h2>Inicio de Sesión</h2>
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        background: "none",
+      }}
+    >
+      <form
+        onSubmit={enviar}
+        style={{
+          width: "350px",
+          padding: "30px",
+          borderRadius: "15px",
+          background: "#0b0c10",
+          boxShadow: "0 0 25px #45a29e",
+          textAlign: "center",
+        }}
+      >
+        <h2
+          style={{
+            color: "#66fcf1",
+            textShadow: "0 0 10px #66fcf1",
+            marginBottom: "25px",
+          }}
+        >
+          Inicio de Sesión
+        </h2>
 
-        <form onSubmit={handleSubmit}>
-          <Input type="email" name="email" placeholder="Correo" onChange={handleChange} />
-          <Input type="password" name="password" placeholder="Contraseña" onChange={handleChange} />
-          <button type="submit">Entrar</button>
-        </form>
+        <input
+          type="email"
+          placeholder="Correo"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          style={estilosInput}
+        />
 
-        {mensaje && <Message error>{mensaje}</Message>}
-      </Card>
-    </Container>
+        <input
+          type="password"
+          placeholder="Contraseña"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          style={estilosInput}
+        />
+
+        <button type="submit" style={estilosBoton}>
+          Entrar
+        </button>
+      </form>
+    </div>
   );
 }
+
+const estilosInput = {
+  width: "100%",
+  padding: "10px",
+  marginBottom: "15px",
+  borderRadius: "10px",
+  border: "2px solid #45a29e",
+  background: "#1f2833",
+  color: "white",
+  outline: "none",
+  boxShadow: "0 0 10px #45a29e",
+};
+
+const estilosBoton = {
+  width: "100%",
+  padding: "10px",
+  borderRadius: "10px",
+  background: "#66fcf1",
+  color: "black",
+  border: "none",
+  fontWeight: "bold",
+  cursor: "pointer",
+  marginTop: "10px",
+};

@@ -1,58 +1,107 @@
-// src/pages/Registro.jsx
-import React, { useState } from "react";
+import { useState } from "react";
+import api from "../api";
 import { useNavigate } from "react-router-dom";
-import api from "../api.js";
 
 export default function Registro() {
-  const [form, setForm] = useState({
-    nombre: "",
-    email: "",
-    password: "", // debe llamarse 'password' para coincidir con backend
-  });
-
   const navigate = useNavigate();
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const [nombre, setNombre] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleSubmit = async (e) => {
+  const enviar = async (e) => {
     e.preventDefault();
-
-    try {
-      // Llamada al backend para registrar
-      const res = await api.post("/auth/register", form);
-
-      // Si el backend devuelve token o usuario, no hace falta guardarlo aquí.
-      // Redirigimos al login para que el usuario ingrese sus credenciales.
-      alert("Usuario registrado correctamente. Ahora inicia sesión.");
-      navigate("/login");
-    } catch (err) {
-      console.error(err);
-      alert(err.response?.data?.mensaje || "Error al registrar usuario");
-    }
+    await api.post("/auth/register", { nombre, email, password });
+    navigate("/login");
+    
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "80px" }}>
-      <h2>Registro de usuario</h2>
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        background: "none",
+      }}
+    >
+      <form
+        onSubmit={enviar}
+        style={{
+          width: "350px",
+          padding: "30px",
+          borderRadius: "15px",
+          background: "#0b0c10",
+          boxShadow: "0 0 25px #45a29e",
+          textAlign: "center",
+        }}
+      >
+        <h2
+          style={{
+            color: "#66fcf1",
+            textShadow: "0 0 10px #66fcf1",
+            marginBottom: "25px",
+          }}
+        >
+          Registro de Usuario
+        </h2>
 
-      <form onSubmit={handleSubmit} style={{
-          display: "inline-block", textAlign: "left",
-          background: "#1b2845", padding: "30px", borderRadius: "10px",
-          boxShadow: "0 0 15px rgba(0,188,212,0.4)", color: "#fff"
-        }}>
-        <label>Nombre</label><br />
-        <input name="nombre" value={form.nombre} onChange={handleChange} required /><br />
+        <input
+          type="text"
+          placeholder="Nombre"
+          value={nombre}
+          onChange={(e) => setNombre(e.target.value)}
+          required
+          style={estilosInput}
+        />
 
-        <label>Correo</label><br />
-        <input type="email" name="email" value={form.email} onChange={handleChange} required /><br />
+        <input
+          type="email"
+          placeholder="Correo"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          style={estilosInput}
+        />
 
-        <label>Contraseña</label><br />
-        <input type="password" name="password" value={form.password} onChange={handleChange} required autoComplete="new-password" /><br />
+        <input
+          type="password"
+          placeholder="Contraseña"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          style={estilosInput}
+        />
 
-        <button type="submit" style={{ marginTop: 10, padding: 10, width: "100%", background: "#00bcd4", border: "none", color: "#000", fontWeight: "bold", borderRadius: 6 }}>
+        <button type="submit" style={estilosBoton}>
           Registrarse
         </button>
       </form>
     </div>
   );
 }
+
+const estilosInput = {
+  width: "100%",
+  padding: "10px",
+  marginBottom: "15px",
+  borderRadius: "10px",
+  border: "2px solid #45a29e",
+  background: "#1f2833",
+  color: "white",
+  outline: "none",
+  boxShadow: "0 0 10px #45a29e",
+};
+
+const estilosBoton = {
+  width: "100%",
+  padding: "10px",
+  borderRadius: "10px",
+  background: "#66fcf1",
+  color: "black",
+  border: "none",
+  fontWeight: "bold",
+  cursor: "pointer",
+  marginTop: "10px",
+};

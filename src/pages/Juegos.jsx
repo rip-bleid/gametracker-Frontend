@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import api from "../api.js";
+import { AuthContext } from "../context/Authcontext";
 
-// ⭐️ Componente de estrellas
+// ⭐ Componente de estrellas
 const StarRating = ({ rating, setRating }) => {
   return (
-    <div style={{ margin: "10px 0", gridColumn: "1 / 3", textAlign: "center" }}>
+    <div style={{ margin: "10px 0", textAlign: "center", gridColumn: "1 / 3" }}>
       {[1, 2, 3, 4, 5].map((star) => (
         <span
           key={star}
@@ -88,6 +89,8 @@ const Grid = styled.div`
 
 // ---------- COMPONENTE PRINCIPAL ----------
 export default function Juegos() {
+  const { usuario } = useContext(AuthContext);
+
   const [juegos, setJuegos] = useState([]);
 
   const [nuevoJuego, setNuevoJuego] = useState({
@@ -98,6 +101,7 @@ export default function Juegos() {
     genero: "",
     resena: "",
     rating: 0,
+    creadoPor: usuario?.nombre || "Anon"
   });
 
   useEffect(() => {
@@ -110,8 +114,13 @@ export default function Juegos() {
   };
 
   const agregarJuego = async (e) => {
-    e.preventDefault();
-    await api.post("/juegos", nuevoJuego);
+  e.preventDefault();
+
+  try {
+    await api.post("/juegos", {
+      ...nuevoJuego,
+      creadoPor: usuario.id
+    });
 
     setNuevoJuego({
       titulo: "",
@@ -124,7 +133,11 @@ export default function Juegos() {
     });
 
     cargarJuegos();
-  };
+  } catch (err) {
+    console.log("ERROR AL AGREGAR JUEGO:", err);
+  }
+};
+
 
   const eliminarJuego = async (id) => {
     await api.delete(`/juegos/${id}`);
@@ -195,7 +208,6 @@ export default function Juegos() {
           <option value={true}>✔️ Completado</option>
         </Select>
 
-        {/* ⭐ Estrellas dentro del formulario */}
         <StarRating
           rating={nuevoJuego.rating}
           setRating={(value) =>
@@ -246,6 +258,7 @@ export default function Juegos() {
             <p>📝 Reseña: {j.resena}</p>
             <p>⏱ Horas jugadas: {j.horasJugadas}</p>
             <p>🎯 Completado: {j.completado ? "✔ Sí" : "❌ No"}</p>
+            <p>👤 Añadido por: {j.creadoPor}</p>
 
             <button
               onClick={() => eliminarJuego(j._id)}
