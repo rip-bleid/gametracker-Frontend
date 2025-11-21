@@ -1,41 +1,53 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import api from "../api";
-import { AuthContext } from "../context/Authcontext";
 
 export default function Reseñas() {
-  const { usuario } = useContext(AuthContext);
-  const [resenas, setResenas] = useState([]);
+  const [juegos, setJuegos] = useState([]);
 
-  console.log(usuario); 
-  
   useEffect(() => {
-    cargarResenas();
+    cargar();
   }, []);
 
-  const cargarResenas = async () => {
+  const cargar = async () => {
     try {
-      const res = await api.get("/resenas");
-      setResenas(res.data);
-    } catch (error) {
-      console.log("Error cargando reseñas", error);
+      const res = await api.get("/juegos");
+      setJuegos(res.data);
+    } catch (e) {
+      console.error("Error cargando reseñas", e);
     }
   };
 
   return (
-    <div>
+    <div style={{ color: "white" }}>
       <h2>Reseñas de Juegos 📝</h2>
 
-      {resenas.length === 0 && <p>No hay reseñas todavía.</p>}
+      {juegos.length === 0 && <p>No hay reseñas todavía.</p>}
 
-      {resenas.map((r) => (
-        <div key={r._id} style={{ borderBottom: "1px solid #ccc", padding: "1rem 0" }}>
-          <h3>Juego: {r.juegoId}</h3>
-          <p>{r.texto}</p>
-          <strong>Por: {r.autor}</strong>
-          <br />
-          ⭐ {r.puntuacion} / 5
-        </div>
-      ))}
+      {juegos
+        .filter((j) => j.resena && j.resena.trim() !== "")
+        .map((j) => (
+          <div
+            key={j._id}
+            style={{
+              borderBottom: "1px solid #66fcf1",
+              padding: "1rem 0",
+              marginBottom: "15px",
+            }}
+          >
+            <h3>{j.titulo}</h3>
+
+            <p>{j.resena}</p>
+
+            <p>
+              ⭐ <b>{j.rating}</b> / 5
+            </p>
+
+            <p>
+              👤 Añadido por:{" "}
+              <b>{j.creadoPor ? j.creadoPor : "Usuario desconocido"}</b>
+            </p>
+          </div>
+        ))}
     </div>
   );
 }

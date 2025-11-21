@@ -110,6 +110,7 @@ export default function Juegos() {
 
   const cargarJuegos = async () => {
     const res = await api.get("/juegos");
+    console.log(res.data);
     setJuegos(res.data);
   };
 
@@ -119,7 +120,8 @@ export default function Juegos() {
   try {
     await api.post("/juegos", {
       ...nuevoJuego,
-      creadoPor: usuario.id
+      creadoPor: usuario.id,
+      creadoPorNombre: usuario.nombre
     });
 
     setNuevoJuego({
