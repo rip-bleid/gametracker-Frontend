@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../context/Authcontext";
 import api from "../api.js";
 
-const BACKEND_BASE = "http://localhost:5000"; // cambia si tu backend está en otra URL
+const BACKEND_BASE = "https://gametracker-backend-three.vercel.app/api/"; // cambia si tu backend está en otra URL
 const PLACEHOLDER = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
 export default function Perfil() {

@@ -118,11 +118,12 @@ export default function Juegos() {
   e.preventDefault();
 
   try {
-    await api.post("/juegos", {
+    const juego = {
       ...nuevoJuego,
       creadoPor: usuario.id,
       creadoPorNombre: usuario.nombre
-    });
+    }
+    await api.post("/juegos", juego);
 
     setNuevoJuego({
       titulo: "",
@@ -260,7 +261,7 @@ export default function Juegos() {
             <p>📝 Reseña: {j.resena}</p>
             <p>⏱ Horas jugadas: {j.horasJugadas}</p>
             <p>🎯 Completado: {j.completado ? "✔ Sí" : "❌ No"}</p>
-            <p>👤 Añadido por: {j.creadoPor}</p>
+            <p>👤 Añadido por: {j.creadoPorNombre}</p>
 
             <button
               onClick={() => eliminarJuego(j._id)}

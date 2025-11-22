@@ -44,7 +44,8 @@ export default function Reseñas() {
 
             <p>
               👤 Añadido por:{" "}
-              <b>{j.creadoPor ? j.creadoPor : "Usuario desconocido"}</b>
+              <b>{j.creadoPorNombre ? j.creadoPorNombre : "Usuario desconocido"}</b> 
+              <br />
             </p>
           </div>
         ))}
