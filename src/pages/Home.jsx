@@ -108,7 +108,7 @@ export default function Inicio() {
   const images = [
     "https://i.blogs.es/0d09c0/playnite-destacada/500_333.webp",
     "https://live.mrf.io/statics/i/ps/www.muycomputer.com/wp-content/uploads/2018/12/Steam-Compartir-Biblioteca-Pr%C3%A9stamo-e1545901279246.jpg?width=1200&enable=upscale",
-    "https://www.gamecored.com/wp-content/uploads/2022/09/xbox-series-x-s-xbox-one-new-library-screen.jpg",
+    "https://preview.redd.it/mi-biblioteca-de-juegos-en-mi-switch-v0-9re6449gpxsc1.jpg?width=640&crop=smart&auto=webp&s=0c18b3fe5b8146b63d364d19310695627a099df4",
   ];
 
   return (
